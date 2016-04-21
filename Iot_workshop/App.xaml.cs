@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.WindowsAzure.MobileServices;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,6 +27,10 @@ namespace Iot_workshop
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
+        /// 
+        public static MobileServiceClient MobileService = new MobileServiceClient(
+            "https://iot-pub.azurewebsites.net"
+        );
         public App()
         {
             Microsoft.ApplicationInsights.WindowsAppInitializer.InitializeAsync(
@@ -104,5 +109,10 @@ namespace Iot_workshop
             //TODO: Save application state and stop any background activity
             deferral.Complete();
         }
+
+        //public static MobileServiceClient MobileService = new MobileServiceClient(
+        //  "http://localhost:58451");
+
+
     }
 }

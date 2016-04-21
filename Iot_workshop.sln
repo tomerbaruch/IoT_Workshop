@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iot_workshop", "Iot_workshop\Iot_workshop.csproj", "{79F459DE-9323-4953-8087-203D1C228837}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin", "..\..\..\Documents\Visual Studio 2015\Projects\App2\App2\Xamarin.csproj", "{BBBCC48D-9DD0-4178-8F7D-8D8F1E117962}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin", "Xamarin\Xamarin.csproj", "{BBBCC48D-9DD0-4178-8F7D-8D8F1E117962}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
