@@ -1,9 +1,12 @@
 ﻿using Iot_workshop.entities;
 using Microsoft.WindowsAzure.MobileServices;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -28,24 +31,13 @@ namespace Iot_workshop
     {
         public MainPage()
         {
-            //this.InitializeComponent();
-            RefreshTodoItems();
-            tomer();
+            this.InitializeComponent();
+            //tempfile.b();
+            //var g = 1;
         }
 
         private MobileServiceCollection<Device, Device> items;
         private IMobileServiceTable<Device> deviceTable = App.MobileService.GetTable<Device>();
-        //String tomer = "fkdsfs";
-
-        private async Task tomer()
-        {
-            Device d = new Device();
-            d.Id = "2";
-            d.location = "spector";
-            d.name = "first";
-            await InsertDevice(d);
-        }
-
 
         private async Task InsertDevice(Device dev)
         {
@@ -74,6 +66,101 @@ namespace Iot_workshop
                 await new MessageDialog(exception.Message, "Error loading items").ShowAsync();
             }
 
+        }
+
+        // Define a member variable for storing the signed-in user. 
+        private MobileServiceUser user;
+
+        // Define a method that performs the authentication process
+        // using a Facebook sign-in. 
+        private async System.Threading.Tasks.Task<bool> AuthenticateAsyncFacebook()
+        {
+            string message;
+            bool success = false;
+            try
+            {
+                // Change 'MobileService' to the name of your MobileServiceClient instance.
+                // Sign-in using Facebook authentication.
+                user = await App.MobileService
+                    .LoginAsync(MobileServiceAuthenticationProvider.Facebook);
+                message =
+                    string.Format("You are now signed in - {0}", user.UserId);
+
+                success = true;
+            }
+            catch (InvalidOperationException)
+            {
+                message = "You must log in. Login Required";
+            }
+
+            var dialog = new MessageDialog(message);
+            dialog.Commands.Add(new UICommand("OK"));
+            await dialog.ShowAsync();
+            return success;
+        }
+
+        // Define a method that performs the authentication process
+        // using a Facebook sign-in. 
+        private async System.Threading.Tasks.Task<bool> AuthenticateAsyncGoogle()
+        {
+            string message;
+            bool success = false;
+            try
+            {
+                // Change 'MobileService' to the name of your MobileServiceClient instance.
+                // Sign-in using Facebook authentication.
+                user = await App.MobileService
+                    .LoginAsync(MobileServiceAuthenticationProvider.Google);
+                message =
+                    string.Format("You are now signed in - {0}", user.UserId);
+
+                success = true;
+            }
+            catch (InvalidOperationException)
+            {
+                message = "You must log in. Login Required";
+            }
+
+            var dialog = new MessageDialog(message);
+            dialog.Commands.Add(new UICommand("OK"));
+            await dialog.ShowAsync();
+            return success;
+        }
+
+        private async void ButtonLogin_Click_Facebook(object sender, RoutedEventArgs e)
+        {
+            // Login the user and then load data from the mobile app.
+            if (await AuthenticateAsyncFacebook())
+            {
+                // Hide the login button and load items from the mobile app.
+                ButtonLogin.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                //await InitLocalStoreAsync(); //offline sync support.
+                //await RefreshTodoItems();
+            }
+        }
+
+        private async void ButtonLogin_Click_Google(object sender, RoutedEventArgs e)
+        {
+            // Login the user and then load data from the mobile app.
+            if (await AuthenticateAsyncGoogle())
+            {
+                // Hide the login button and load items from the mobile app.
+                ButtonLogin.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                //await InitLocalStoreAsync(); //offline sync support.
+                //await RefreshTodoItems();
+            }
+        }
+
+        private async void button_Click(object sender, RoutedEventArgs e)
+        {
+            // Login the user and then load data from the mobile app.
+            if (await AuthenticateAsyncGoogle())
+            {
+                // Hide the login button and load items from the mobile app.
+                ButtonLogin.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                //await InitLocalStoreAsync(); //offline sync support.
+                //await RefreshTodoItems();
+            }
         }
     }
 }

@@ -1,0 +1,58 @@
+﻿@model iot_pub_website.Models.Measurement
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+    <div>
+        <h4>Measurement</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Device_id)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Device_id)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.type)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.type)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.value)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.value)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.time)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.time)
+            </dd>
+    
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>

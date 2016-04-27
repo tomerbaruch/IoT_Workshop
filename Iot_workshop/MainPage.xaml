@@ -18,6 +18,14 @@
         <TextBlock x:Name="GpioStatus_Copy" Text="clean &amp; silent" Margin="29,42,0,504" TextAlignment="Center" FontSize="96" FontWeight="Bold"  Foreground="#FF0E0101"/>
         <TextBlock x:Name="GpioStatus_Copy1" Text="volume : 70db" Margin="-390,221,419,400" TextAlignment="Center" FontSize="50" FontWeight="Bold" Foreground="White" />
         <TextBlock x:Name="GpioStatus_Copy2" Text="smoke : 200pp" Margin="-390,305,419,310" TextAlignment="Center" FontSize="50" FontWeight="Bold" Foreground="White" />
+        <Button Grid.Row ="1" Grid.Column="1" Name="ButtonLogin" Click="ButtonLogin_Click_Facebook" 
+    Margin="10, 0, 0, 0" Visibility="Visible">Sign in</Button>
         <Image x:Name="image" HorizontalAlignment="Left" Height="100" Margin="676,258,0,0" VerticalAlignment="Top" Width="100"/>
+
+        <Button Name="ButtonLogin2" Click="ButtonLogin_Click_Google" 
+    Margin="1000,424,1744,424" Visibility="Visible" HorizontalAlignment="Right" Width="150">GOOGLE</Button>
+        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="835,496,0,0" VerticalAlignment="Top" Height="92" Width="122" Click="button_Click"/>
+
+
     </Grid>
 </Page>
