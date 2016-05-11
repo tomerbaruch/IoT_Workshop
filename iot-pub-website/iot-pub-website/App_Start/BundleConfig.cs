@@ -11,6 +11,12 @@ namespace iot_pub_website
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/chart").Include(
+            "~/Scripts/chart.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/fullDetails").Include(
+                 "~/Scripts/fullDetails.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 
@@ -21,7 +27,9 @@ namespace iot_pub_website
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
-                      "~/Scripts/respond.js"));
+                      "~/Scripts/respond.js",
+                      "~/Script/tomer.js",
+                      "~/Script/fullDetails.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

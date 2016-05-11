@@ -7,9 +7,12 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using iot_pub_website.Models;
+using System.Collections;
+using Newtonsoft.Json;
 
 namespace iot_pub_website.Controllers
 {
+    [AllowAnonymous]
     public class MeasurementsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -17,7 +20,94 @@ namespace iot_pub_website.Controllers
         // GET: Measurements
         public ActionResult Index()
         {
+            //List<Measurement> l = new List<Measurement>();
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    Measurement m = new Measurement();
+            //    m.Device_id = 1;
+            //    Random random = new Random();
+            //    m.type = (Sensor_type) random.Next(1, 4);
+            //    m.value = random.Next(0, 99);
+            //    m.time = DateTime.Now;
+            //    l.Add(m);
+            //}
+            //db.Measurements.AddRange(l);
+            //db.SaveChanges();
+            //ArrayList tomer = db.Measurements.ToList().Select(x => x.time.ToString()).ToArray();
+            Mpage tomer = new Mpage();
+            tomer.measurements = db.Measurements.ToList();
+            tomer.labels = db.Measurements.ToList().Select(x => x.time.ToString()).ToArray();
             return View(db.Measurements.ToList());
+        }
+
+        [HttpPost]
+        public ActionResult labels(int dataType, string idTime)
+        {
+            DateTime from = DateTime.Now.AddYears(-5);
+            DateTime to = DateTime.Now;
+            switch (idTime)
+            {
+                case "oneDay":
+                    from = DateTime.Now.AddDays(-1);
+                    to = DateTime.Now;
+                    break;
+                case "oneWeek":
+                    from = DateTime.Now.AddDays(-7);
+                    to = DateTime.Now;
+                    break;
+                case "oneMonth":
+                    from = DateTime.Now.AddMonths(-1);
+                    to = DateTime.Now;
+                    break;
+                case "threeMonths":
+                    from = DateTime.Now.AddMonths(-3);
+                    to = DateTime.Now;
+                    break;
+                case "oneYear":
+                    from = DateTime.Now.AddYears(-1);
+                    to = DateTime.Now;
+                    break;
+                default:
+                    break;
+            }
+            return Json(db.Measurements.ToList().Where(z => z.time > from && z.time < to).Where(y => (int)y.type == dataType).Select(x => x.time.Date.ToString("d")).ToArray(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult data(int dataType, String idTime)
+        {
+            DateTime from = DateTime.Now.AddYears(-5);
+            DateTime to = DateTime.Now;
+            switch (idTime){
+                case "oneDay":
+                    from = DateTime.Now.AddDays(-1);
+                    to = DateTime.Now;
+                    break;
+                case "oneWeek":
+                    from = DateTime.Now.AddDays(-7);
+                    to = DateTime.Now;
+                    break;
+                case "oneMonth":
+                    from = DateTime.Now.AddMonths(-1);
+                    to = DateTime.Now;
+                    break;
+                case "threeMonths":
+                    from = DateTime.Now.AddMonths(-3);
+                    to = DateTime.Now;
+                    break;
+                case "oneYear":
+                    from = DateTime.Now.AddYears(-1);
+                    to = DateTime.Now;
+                    break;
+                default:
+                    break;
+            }
+            return Json(db.Measurements.ToList().Where(z => z.time > from && z.time < to).Where(y => (int)y.type == dataType).Select(x => x.value).ToArray(), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult FullDetails(int deviceId)
+        {
+            return View(db.Measurements.ToList().Where(z => z.Device_id == deviceId));
         }
 
         // GET: Measurements/Details/5
@@ -104,6 +194,20 @@ namespace iot_pub_website.Controllers
             return View(measurement);
         }
 
+        [Route("deleteRecords")]
+        [HttpGet]
+        public ActionResult DeleteRecords(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            List<Measurement> a = db.Measurements.SqlQuery("Select * from Measurements Where device_id={0}", id).ToList();
+            db.Measurements.RemoveRange(a);
+            db.SaveChanges();
+            return new EmptyResult();
+        }
+
         // POST: Measurements/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -125,9 +229,9 @@ namespace iot_pub_website.Controllers
         }
 
         //my api
-        [Route("Add/{type}")]
+        [Route("Addddd")]
         [HttpGet]
-        public HttpStatusCode Add(int type)
+        public HttpStatusCode Addddd(int type)
         {
             Measurement m = new Measurement();
             m.Device_id = 1;
@@ -139,6 +243,16 @@ namespace iot_pub_website.Controllers
             return HttpStatusCode.OK;
         }
 
+        [Route("Add")]
+        [HttpPost]
+        public HttpStatusCode Add(String m)
+        {
+            List<Measurement> toAdd = JsonConvert.DeserializeObject<List<Measurement>>(m);
+            db.Measurements.AddRange(toAdd);
+            db.SaveChanges();
+            return HttpStatusCode.OK;
+        }
+
         [Route("GetDeviceMeasurements/{id}")]
         [HttpGet]
         public List<Measurement> GetAllDevice(int id)
@@ -147,9 +261,37 @@ namespace iot_pub_website.Controllers
             return a;
         }
 
-        public ActionResult fiveDays(int id)
+        public ActionResult OneDay(int id)
         {
             DateTime from = DateTime.Now.AddDays(-5);
+            DateTime to = DateTime.Now;
+            return View("Index", GetDeviceMeasurementsByDate(id, from, to));
+        }
+
+        public ActionResult OneWeek(int id)
+        {
+            DateTime from = DateTime.Now.AddDays(-7);
+            DateTime to = DateTime.Now;
+            return View("Index", GetDeviceMeasurementsByDate(id, from, to));
+        }
+
+        public ActionResult OneMonth(int id)
+        {
+            DateTime from = DateTime.Now.AddMonths(-1);
+            DateTime to = DateTime.Now;
+            return View("Index", GetDeviceMeasurementsByDate(id, from, to));
+        }
+
+        public ActionResult ThreeMonths(int id)
+        {
+            DateTime from = DateTime.Now.AddMonths(-3);
+            DateTime to = DateTime.Now;
+            return View("Index", GetDeviceMeasurementsByDate(id, from, to));
+        }
+
+        public ActionResult OneYear(int id)
+        {
+            DateTime from = DateTime.Now.AddYears(-1);
             DateTime to = DateTime.Now;
             return View("Index", GetDeviceMeasurementsByDate(id, from, to));
         }
@@ -163,11 +305,12 @@ namespace iot_pub_website.Controllers
             return a;
         }
 
+        [AllowAnonymous]
         [Route("OverTheLimitByDate")]
         [HttpGet]
         public ActionResult OverTheLimitByDate(int id)
         {
-            DateTime from = DateTime.Now.AddDays(-5);
+            DateTime from = DateTime.Now.AddYears(-5);
             DateTime to = DateTime.Now;
             //int id = 1;
 

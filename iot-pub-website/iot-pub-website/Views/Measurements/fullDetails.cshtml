@@ -4,19 +4,26 @@
 @{
     ViewBag.Title = "Index";
 }
-
-<script type="text/javascript" src="/Scripts/tomer.js"></script>
-
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
 <h2>Live measurements from Raspberry pie</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+
+<div>
+    @if (Model.Count() > 0){
+            @Html.Action("device_details", "Devices", new { id = Model.ElementAt(0).Device_id })
+    }
+</div>
+
+
+
 <table class="table">
     <tr>
-        <th>
+        @*<th>
             @Html.DisplayNameFor(model => model.Device_id)
-        </th>
+        </th>*@
         <th>
             @Html.DisplayNameFor(model => model.type)
         </th>
@@ -32,9 +39,9 @@
 @foreach (var item in Model) {
     String style = item.value > Constants.CO2_LIMIT ? "Background-color:red" : "";
     <tr style="@style">
-        <td id="name">
-            @*@Html.DisplayFor(modelItem => item.Device_id)*@
-        </td>
+        @*<td id="name">
+            @Html.DisplayFor(modelItem => item.Device_id)
+        </td>*@
         <td>
             @Html.DisplayFor(modelItem => item.type)
         </td>
@@ -54,6 +61,40 @@
 
 </table>
 
-<div>
-    @Html.ActionLink("5 days", "fiveDays", new { id=1 })
-</div>
+<table>
+        <tr>
+            <td>
+                @Html.ActionLink("1 day", "oneDay", new { id = 1 })
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("1 week", "oneWeek", new { id = 1 })
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("1 month", "oneMonth", new { id = 1 })
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("3 months", "ThreeMonths", new { id = 1 })
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("1 year", "OneYear", new { id = 1 })
+            </td>
+        </tr>
+    <tr>
+        <td>
+            <button id="deleteRP">delete records</button>
+        </td>
+    </tr>
+
+    
+</table>
+<script src="~/Scripts/fullDetails.js"></script>
+
+

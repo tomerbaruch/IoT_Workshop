@@ -36,6 +36,12 @@ namespace iot_pub_website.Controllers
             return View(device);
         }
 
+        public ActionResult device_details(int id)
+        {
+            Device device = db.Devices.Find(id);
+            return View(device);
+        }
+
         // GET: Devices/Create
         public ActionResult Create()
         {

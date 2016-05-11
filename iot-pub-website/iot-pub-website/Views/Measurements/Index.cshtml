@@ -1,0 +1,59 @@
+﻿@model IEnumerable<iot_pub_website.Models.Measurement>
+@using iot_pub_website.Models;
+
+@{
+    ViewBag.Title = "Index";
+}
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+<h2>Live measurements from Raspberry pie</h2>
+
+@*<p>
+    @Html.ActionLink("Create New", "Create")
+</p>*@
+<table>
+    <tr>
+        <td>
+            <canvas id="co" width="400" height="400"></canvas>
+        </td>
+        <td>
+            <canvas id="sound" width="400" height="400"></canvas>
+        </td>
+        <td>
+            <canvas id="alcohol" width="400" height="400"></canvas>
+        </td>
+    </tr>
+</table>
+<div>
+    <table>
+        <tr>
+            <td>
+                <button id="oneDay" class="link">1 day</button>
+            </td>
+            <td>
+                <button id="oneWeek" class="link">1 week</button>
+            </td>
+            <td>
+                <button id="oneMonth" class="link">1 month</button>
+            </td>
+            <td>
+                <button id="threeMonths" class="link">3 months</button>
+            </td>
+            <td>
+                <button id="oneYear" class="link">1 year</button>
+            </td>
+            <td>
+                <select id="selectDevice"></select>
+            </td>
+            <td id="linkTD">
+                @Html.ActionLink("Full details", "FullDetails", new { deviceId = "_parameter"}, new {@class="changeLink"})
+            </td>
+        </tr>
+    </table>
+</div>
+<script src="~/Scripts/Chart.js"></script>
+<script src="~/Scripts/tomer.js"></script>
+
+<div>
+    @Html.Action("device_details", "Devices", new { id = Model.ElementAt(0).Device_id })
+</div>
+

@@ -10,7 +10,7 @@ using iot_pub_website.Models;
 
 namespace iot_pub_website.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class ManageController : Controller
     {
         private ApplicationSignInManager _signInManager;
