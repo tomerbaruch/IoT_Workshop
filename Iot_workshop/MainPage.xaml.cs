@@ -32,6 +32,7 @@ namespace Iot_workshop
         public MainPage()
         {
             this.InitializeComponent();
+            tempfile.tomer();
             //tempfile.b();
             //var g = 1;
         }
@@ -153,14 +154,7 @@ namespace Iot_workshop
 
         private async void button_Click(object sender, RoutedEventArgs e)
         {
-            // Login the user and then load data from the mobile app.
-            if (await AuthenticateAsyncGoogle())
-            {
-                // Hide the login button and load items from the mobile app.
-                ButtonLogin.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-                //await InitLocalStoreAsync(); //offline sync support.
-                //await RefreshTodoItems();
-            }
+            tempfile.tomer();
         }
     }
 }

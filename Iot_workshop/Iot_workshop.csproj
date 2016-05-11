@@ -99,6 +99,8 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="entities\Device.cs" />
+    <Compile Include="entities\Measurement.cs" />
+    <Compile Include="entities\Sensor_type.cs" />
     <Compile Include="entities\tempfile.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

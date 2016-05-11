@@ -1,0 +1,101 @@
+﻿@model IEnumerable<iot_pub_website.Models.Measurement>
+@using iot_pub_website.Models;
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Live measurements from Raspberry pie</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+@*<table>
+    <tr>
+        <th>
+            device_id: 
+        </th>
+        <td> 
+            @Model.Device_id 
+        </td>
+    </tr>
+</table>*@
+
+<div>
+    @Html.Action("device_details", "Devices", new { id = Model.ElementAt(0).Device_id })
+</div>
+
+<table class="table">
+    <tr>
+        @*<th>
+            @Html.DisplayNameFor(model => model.Device_id)
+        </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.type)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.value)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.time)
+        </th>
+        <th></th>
+    </tr>
+    
+@foreach (var item in Model) {
+    String style = item.value > Constants.CO2_LIMIT ? "Background-color:red" : "";
+    <tr style="@style">
+        @*<td id="name">
+            @Html.DisplayFor(modelItem => item.Device_id)
+        </td>*@
+        <td>
+            @Html.DisplayFor(modelItem => item.type)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.value)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.time)
+        </td>
+        @*<td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>*@
+    </tr>
+}
+
+</table>
+
+<table>
+        <tr>
+            <td>
+                @Html.ActionLink("1 day", "oneDay", new { id = 1 })
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("1 week", "oneWeek", new { id = 1 })
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("1 month", "oneMonth", new { id = 1 })
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("3 months", "ThreeMonths", new { id = 1 })
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("1 year", "OneYear", new { id = 1 })
+            </td>
+        </tr>
+</table>
+
+<script type="text/javascript">
+    document.getElementById("name").innerHTML = "blaaaa";
+</script>
