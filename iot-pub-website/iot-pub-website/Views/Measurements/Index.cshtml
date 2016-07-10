@@ -7,40 +7,42 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
 <h2>Live measurements from Raspberry pie</h2>
 
-@*<p>
-    @Html.ActionLink("Create New", "Create")
-</p>*@
+<div class="my-loader" style="display:none"></div>
+
 <table>
     <tr>
         <td>
             <canvas id="co" width="400" height="400"></canvas>
+            <div id="co_nodata" style="display:none">No CO2 Data</div>
         </td>
         <td>
             <canvas id="sound" width="400" height="400"></canvas>
+            <div id="sound_nodata" style="display:none">No Sound Data</div>
         </td>
         <td>
             <canvas id="alcohol" width="400" height="400"></canvas>
+            <div id="alcohol_nodata" style="display:none">No Alcohol Data </div>
         </td>
     </tr>
 </table>
 <div>
-    <table>
+    <table  id="options_div" style="margin:auto; width:60%">
         <tr>
             <td>
-                <button id="oneDay" class="link">1 day</button>
+                <button id="oneDay" class="link my-button">1 day</button>
             </td>
             <td>
-                <button id="oneWeek" class="link">1 week</button>
+                <button id="oneWeek" class="link my-button">1 week</button>
             </td>
             <td>
-                <button id="oneMonth" class="link">1 month</button>
+                <button id="oneMonth" class="link my-button">1 month</button>
             </td>
-            <td>
+            @*<td>
                 <button id="threeMonths" class="link">3 months</button>
             </td>
             <td>
                 <button id="oneYear" class="link">1 year</button>
-            </td>
+            </td>*@
             <td>
                 <select id="selectDevice"></select>
             </td>
@@ -51,9 +53,11 @@
     </table>
 </div>
 <script src="~/Scripts/Chart.js"></script>
-<script src="~/Scripts/tomer.js"></script>
+<script src="~/Scripts/Measurements.js"></script>
 
 <div>
-    @Html.Action("device_details", "Devices", new { id = Model.ElementAt(0).Device_id })
+    @Html.Action("device_details", "Devices", new { id = Model.Count() > 0 ? Model.ElementAt(0).Device_id : 1})
 </div>
+
+
 

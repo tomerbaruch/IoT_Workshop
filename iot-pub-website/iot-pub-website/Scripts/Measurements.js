@@ -1,7 +1,12 @@
 var ctx1 = document.getElementById("co");
 var ctx2 = document.getElementById("sound");
 var ctx3 = document.getElementById("alcohol");
-var global_id = 1 //default;
+var global_id = 1; //default;
+var global_time = "oneMonth"; //default
+
+setInterval(function () {
+    createGraph(global_time, global_id);
+}, 60000);
 
 var x;
 var y;
@@ -29,27 +34,24 @@ $("#selectDevice").change(function () {
         var x = this.href.substring(this.href.indexOf('=') + 1, this.href.length);
         return this.href.replace(x, global_id);
     });
+    createGraph(global_time, global_id);
 });
 
 $('.changeLink').attr('href', function () {
     return this.href.replace('_parameter', global_id);
 });
 
-//$.ajax({
-//    type: "POST",
-//    url: "/Measurements/data",
-//    data: param = "",
-//    contentType: "application/json; charset=utf-8",
-//    dataType: "json",
-//    success: successFunc2,
-//    error: errorFunc,
-//    async: false
-//});
+function createGraph(idTime, global_id) {
+    $(".my-loader").show();
+    $("#co_nodata").hide();
+    $("#sound_nodata").hide();
+    $("#alcohol_nodata").hide();
 
-function createGraph(idTime) {
-    getData(1, ctx1, idTime);
-    getData(2, ctx2, idTime);
-    getData(3, ctx3, idTime);
+
+    getData(1, ctx1, idTime, global_id);
+    getData(2, ctx2, idTime, global_id);
+    getData(3, ctx3, idTime, global_id);
+    
 }
 
 function getData(type, graph, idTime) {
@@ -58,24 +60,26 @@ function getData(type, graph, idTime) {
         url: "/Measurements/data",
         data: {
             'dataType': type,
-            'idTime': idTime
+            'idTime': idTime,
+            'deviceId' : global_id
         },
         dataType: "json",
         success: function (data) {
-            getLabels(data, type, graph, idTime);
+            getLabels(data, type, graph, idTime, global_id);
         },
         error: errorFunc,
         async: false
     });
 }
 
-function getLabels(data, type, graph, idTime) {
+function getLabels(data, type, graph, idTime, global_id) {
     $.ajax({
         type: "POST",
         url: "/Measurements/labels",
         data: {
             'dataType': type,
-            'idTime' : idTime
+            'idTime': idTime,
+            'deviceId' : global_id
         },
         //contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -88,6 +92,17 @@ function getLabels(data, type, graph, idTime) {
 }
 
 function buildGraph(data, labels, graph, type) {
+    if (data.length == 0) {
+        if (type == 1) {
+            $("#co_nodata").show();
+        }
+        else if (type == 2) {
+            $("#sound_nodata").show();
+        }
+        else {
+            $("#alcohol_nodata").show();
+        }
+    }
     new Chart(graph, {
         type: 'line',
         data: {
@@ -110,19 +125,17 @@ function buildGraph(data, labels, graph, type) {
             display: false
         }
     });
+    if (type == 3) {
+        $(".my-loader").hide();
+    }
 }
 
-//function successFunc2(data, status) {
-//    //alert(data);
-//    y = data;
-//}
-
-getData(1, ctx1);
-getData(2, ctx2);
-getData(3, ctx3);
+getData(1, ctx1, global_id);
+getData(2, ctx2, global_id);
+getData(3, ctx3, global_id);
 
 function errorFunc(data, status) {
-    alert('error');
+    //alert('error');
 }
 
 function getTitle(type) {
@@ -148,80 +161,12 @@ function getColor(type) {
         return "lightGreen";
     }
 }
-//var myChart1 = new Chart(ctx1, {
-//    type: 'line',
-//    data: {
-//        labels: x,
-//        datasets: [{
-//            label: '# CO2 level',
-//            data: y,
-//        }]
-//    },
-//    options: {
-//        scales: {
-//            yAxes: [{
-//                ticks: {
-//                    beginAtZero:true
-//                }
-//            }]
-//        },
-//        responsive: false,
-//        display: false
-//    }
-//});
-
-//var myChart2 = new Chart(ctx2, {
-//    type: 'line',
-//    data: {
-//        labels: x,
-//        datasets: [{
-//            label: '# Sound level',
-//            data: y,
-//            //borderColor: "blue",
-//            backgroundColor: "lightBlue"
-//        }]
-//    },
-//    options: {
-//        scales: {
-//            yAxes: [{
-//                ticks: {
-//                    beginAtZero: true
-//                }
-//            }]
-//        },
-//        responsive: false,
-//        display: false
-//    }
-//});
-
-//var myChart3 = new Chart(ctx3, {
-//    type: 'line',
-//    data: {
-//        labels: x,
-//        datasets: [{
-//            label: '# Alcohol level',
-//            data: y,
-//            //borderColor: "green",
-//            backgroundColor: "lightGreen"
-//        }]
-//    },
-//    options: {
-//        scales: {
-//            yAxes: [{
-//                ticks: {
-//                    beginAtZero: true
-//                }
-//            }]
-//        },
-//        responsive: false,
-//        display: false,
-//    }
-//});
 
 $(".link").click(function (event) {
     var id = event.target.id;
     //alert(event.target.id);
-    createGraph(id);
+    global_time = id;
+    createGraph(global_time, global_id);
 });
 
 

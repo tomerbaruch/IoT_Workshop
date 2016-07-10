@@ -16,5 +16,17 @@ namespace iot_pub_website.Models
         public int value { get; set; }
 
         public DateTime time { get; set; }
+
+        public Measurement(int device_id, int id)
+        {
+            this.Device_id = device_id;
+        }
+
+        public Measurement()
+        {
+
+        }
     }
+
+
 }

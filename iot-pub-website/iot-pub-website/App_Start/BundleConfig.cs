@@ -28,8 +28,9 @@ namespace iot_pub_website
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js",
-                      "~/Script/tomer.js",
-                      "~/Script/fullDetails.js"));
+                      //"~/Scripts/Measurements.js",
+                      //"~/Scripts/Devices.js",
+                      "~/Scripts/fullDetails.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

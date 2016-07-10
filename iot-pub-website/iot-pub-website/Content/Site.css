@@ -22,3 +22,53 @@ select,
 textarea {
     max-width: 280px;
 }
+
+#co_nodata {
+  position: absolute;
+  left: 22%;
+  top: 45%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+}
+
+#alcohol_nodata {
+  position: absolute;
+  left: 80%;
+  top: 45%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+}
+
+#sound_nodata {
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+}
+
+.my-button {
+    border: none;
+    padding: 12px 29px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+
+
+
+
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+

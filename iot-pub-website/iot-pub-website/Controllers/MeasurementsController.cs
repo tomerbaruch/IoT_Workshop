@@ -20,28 +20,11 @@ namespace iot_pub_website.Controllers
         // GET: Measurements
         public ActionResult Index()
         {
-            //List<Measurement> l = new List<Measurement>();
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    Measurement m = new Measurement();
-            //    m.Device_id = 1;
-            //    Random random = new Random();
-            //    m.type = (Sensor_type) random.Next(1, 4);
-            //    m.value = random.Next(0, 99);
-            //    m.time = DateTime.Now;
-            //    l.Add(m);
-            //}
-            //db.Measurements.AddRange(l);
-            //db.SaveChanges();
-            //ArrayList tomer = db.Measurements.ToList().Select(x => x.time.ToString()).ToArray();
-            Mpage tomer = new Mpage();
-            tomer.measurements = db.Measurements.ToList();
-            tomer.labels = db.Measurements.ToList().Select(x => x.time.ToString()).ToArray();
             return View(db.Measurements.ToList());
         }
 
         [HttpPost]
-        public ActionResult labels(int dataType, string idTime)
+        public ActionResult labels(int dataType, string idTime, int deviceId)
         {
             DateTime from = DateTime.Now.AddYears(-5);
             DateTime to = DateTime.Now;
@@ -70,11 +53,12 @@ namespace iot_pub_website.Controllers
                 default:
                     break;
             }
-            return Json(db.Measurements.ToList().Where(z => z.time > from && z.time < to).Where(y => (int)y.type == dataType).Select(x => x.time.Date.ToString("d")).ToArray(), JsonRequestBehavior.AllowGet);
+            List<String> result = db.Measurements.ToList().Where(z => z.time > from && z.time < to).Where(y => (int)y.type == dataType).Where(r => r.Device_id == deviceId).Select(x => x.time.Date.ToString("d")).ToList();
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public ActionResult data(int dataType, String idTime)
+        public ActionResult data(int dataType, String idTime, int deviceId)
         {
             DateTime from = DateTime.Now.AddYears(-5);
             DateTime to = DateTime.Now;
@@ -102,12 +86,17 @@ namespace iot_pub_website.Controllers
                 default:
                     break;
             }
-            return Json(db.Measurements.ToList().Where(z => z.time > from && z.time < to).Where(y => (int)y.type == dataType).Select(x => x.value).ToArray(), JsonRequestBehavior.AllowGet);
+            return Json(db.Measurements.ToList().Where(z => z.time > from && z.time < to).Where(y => (int)y.type == dataType).Where(r => r.Device_id == deviceId).Select(x => x.value).ToArray(), JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult FullDetails(int deviceId)
         {
-            return View(db.Measurements.ToList().Where(z => z.Device_id == deviceId));
+            List<Measurement> m = db.Measurements.ToList().Where(z => z.Device_id == deviceId).ToList();
+            if (m.Count == 0)
+            {
+                m.Add(new Measurement(deviceId, -1));
+            }
+            return View(m);
         }
 
         // GET: Measurements/Details/5
@@ -131,69 +120,6 @@ namespace iot_pub_website.Controllers
             return View();
         }
 
-        // POST: Measurements/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Device_id,type,value,time")] Measurement measurement)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Measurements.Add(measurement);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(measurement);
-        }
-
-        // GET: Measurements/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Measurement measurement = db.Measurements.Find(id);
-            if (measurement == null)
-            {
-                return HttpNotFound();
-            }
-            return View(measurement);
-        }
-
-        // POST: Measurements/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Device_id,type,value,time")] Measurement measurement)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(measurement).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(measurement);
-        }
-
-        // GET: Measurements/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Measurement measurement = db.Measurements.Find(id);
-            if (measurement == null)
-            {
-                return HttpNotFound();
-            }
-            return View(measurement);
-        }
-
         [Route("deleteRecords")]
         [HttpGet]
         public ActionResult DeleteRecords(int? id)
@@ -208,17 +134,6 @@ namespace iot_pub_website.Controllers
             return new EmptyResult();
         }
 
-        // POST: Measurements/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Measurement measurement = db.Measurements.Find(id);
-            db.Measurements.Remove(measurement);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -226,21 +141,6 @@ namespace iot_pub_website.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        //my api
-        [Route("Addddd")]
-        [HttpGet]
-        public HttpStatusCode Addddd(int type)
-        {
-            Measurement m = new Measurement();
-            m.Device_id = 1;
-            m.type = (Sensor_type)type;
-            m.value = 75;
-            m.time = DateTime.Now;
-            db.Measurements.Add(m);
-            db.SaveChangesAsync();
-            return HttpStatusCode.OK;
         }
 
         [Route("Add")]
@@ -265,42 +165,41 @@ namespace iot_pub_website.Controllers
         {
             DateTime from = DateTime.Now.AddDays(-5);
             DateTime to = DateTime.Now;
-            return View("Index", GetDeviceMeasurementsByDate(id, from, to));
+            return View("FullDetails", GetDeviceMeasurementsByDate(id, from, to));
         }
 
         public ActionResult OneWeek(int id)
         {
             DateTime from = DateTime.Now.AddDays(-7);
             DateTime to = DateTime.Now;
-            return View("Index", GetDeviceMeasurementsByDate(id, from, to));
+            return View("FullDetails", GetDeviceMeasurementsByDate(id, from, to));
         }
 
         public ActionResult OneMonth(int id)
         {
             DateTime from = DateTime.Now.AddMonths(-1);
             DateTime to = DateTime.Now;
-            return View("Index", GetDeviceMeasurementsByDate(id, from, to));
+            return View("FullDetails", GetDeviceMeasurementsByDate(id, from, to));
         }
 
         public ActionResult ThreeMonths(int id)
         {
             DateTime from = DateTime.Now.AddMonths(-3);
             DateTime to = DateTime.Now;
-            return View("Index", GetDeviceMeasurementsByDate(id, from, to));
+            return View("FullDetails", GetDeviceMeasurementsByDate(id, from, to));
         }
 
         public ActionResult OneYear(int id)
         {
             DateTime from = DateTime.Now.AddYears(-1);
             DateTime to = DateTime.Now;
-            return View("Index", GetDeviceMeasurementsByDate(id, from, to));
+            return View("FullDetails", GetDeviceMeasurementsByDate(id, from, to));
         }
 
         [Route("GetDeviceMeasurementsByDate")]
         [HttpGet]
         public List<Measurement> GetDeviceMeasurementsByDate(int id, DateTime start, DateTime end)
         {
-
             List<Measurement> a = db.Measurements.SqlQuery("Select * from Measurements Where device_id={0} and time > {1} and time < {2}", id, start, end).ToList();
             return a;
         }
