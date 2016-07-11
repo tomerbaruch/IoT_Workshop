@@ -25,9 +25,9 @@ function buildTable(data) {
     var tr = $('<tr>');
     tr.append('<td>Name</td>');
     tr.append('<td>Location</td>');
-    tr.append('<td>Pub rating Co2</td>');
-    tr.append('<td>Pub rating Sound</td>');
-    tr.append('<td>Pub rating Alcohol</td>');
+    tr.append('<td>Pub CO2 level</td>');
+    tr.append('<td>Pub Sound level</td>');
+    tr.append('<td>Pub Alcohol level</td>');
     table.append(tr);
 
     for (i = 0; i < data.length; i++) {
